@@ -9,7 +9,8 @@ import 'package:my_todo/ui/widgets/button_widgets.dart';
 import 'package:my_todo/ui/widgets/input_field.dart';
 
 class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({Key? key}) : super(key: key);
+  final Task? task;
+  const AddTaskPage({Key? key, this.task}) : super(key: key);
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -19,6 +20,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final TaskController _taskController = Get.find<TaskController>();
   TextEditingController titleEditingController = TextEditingController();
   TextEditingController noteEditingController = TextEditingController();
+  TextEditingController dateEditingController = TextEditingController();
   DateTime _dateTime = DateTime.now();
   String _endTime = '9:30 PM';
   String _startTime = DateFormat('hh:mm a').format(DateTime.now()).toString();
@@ -28,6 +30,27 @@ class _AddTaskPageState extends State<AddTaskPage> {
   String _selectRepeat = 'None';
   List<String> repeatList = ['None', 'Daily', 'weekly', 'Monthly'];
   int _selectedClr = 0;
+
+  @override
+  void initState() {
+   // print(_taskController.task!.tojson());
+    if (widget.task != null) {
+      setState(() {
+        titleEditingController.text = _taskController.task!.title.toString();
+        noteEditingController.text = widget.task!.note.toString();
+        dateEditingController.text = widget.task!.date.toString();
+        // _dateTime=  DateFormat('"yyyy-MM-dd hh:mm:ss"').parse(widget.task!.date.toString());
+        _startTime = widget.task!.startTime.toString();
+        _endTime = widget.task!.endTime.toString();
+        _selectRemind = int.parse(widget.task!.remind.toString());
+        _selectRepeat = widget.task!.repeat.toString();
+        _selectedClr = int.parse(widget.task!.color.toString());
+      });
+    }
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +74,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 textEditingController: noteEditingController,
               ),
               MyInputFields(
+                textEditingController: dateEditingController,
                 title: 'Date',
                 hint: DateFormat.yMd().format(_dateTime),
                 widget: IconButton(
@@ -162,11 +186,17 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _clolorPallete(),
-                  ButtonWidgets(
-                      label: 'Create Task',
-                      onTap: () {
-                        _validateData();
-                      })
+                  widget.task != null
+                      ? ButtonWidgets(
+                          label: 'Update Task',
+                          onTap: () {
+                            _validateData();
+                          })
+                      : ButtonWidgets(
+                          label: 'Create Task',
+                          onTap: () {
+                            _validateData();
+                          })
                 ],
               )
             ],
@@ -180,6 +210,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     if (titleEditingController.text.isNotEmpty &&
         noteEditingController.text.isNotEmpty) {
       _addTaaskToDB();
+
       Get.back();
     } else if (titleEditingController.text.isEmpty ||
         noteEditingController.text.isEmpty) {
@@ -197,18 +228,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 
   _addTaaskToDB() async {
-    int value = await _taskController.addTask(Task(
-      title: titleEditingController.text,
-      note: noteEditingController.text,
-      date: DateFormat.yMd().format(_dateTime),
-      startTime: _startTime,
-      endTime: _endTime,
-      remind: _selectRemind,
-      repeat: _selectRepeat,
-      color: _selectedClr,
-      isCompleted: 0,
-    ));
-    print('Add Value MTD: ' + value.toString());
+    if (widget.task != null) {
+      
+       int value = await _taskController.updateTask(Task(
+         id: widget.task!.id,
+        title: titleEditingController.text,
+        note: noteEditingController.text,
+        date: DateFormat.yMd().format(_dateTime),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectRemind,
+        repeat: _selectRepeat,
+        color: _selectedClr,
+        isCompleted: 0,
+      ));
+      print('Update Function Called: $value');
+    } else {
+      int value = await _taskController.addTask(Task(
+        title: titleEditingController.text,
+        note: noteEditingController.text,
+        date: DateFormat.yMd().format(_dateTime),
+        startTime: _startTime,
+        endTime: _endTime,
+        remind: _selectRemind,
+        repeat: _selectRepeat,
+        color: _selectedClr,
+        isCompleted: 0,
+      ));
+      print('Insert Function Called: $value');
+    }
+
+    
   }
 
   AppBar _appBar(BuildContext context) {
@@ -295,7 +345,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   _getTimePicker(bool isStartTime) async {
     final TimeOfDay pickedTime = await _showTimePicker();
 
-    String formatedTime =pickedTime.format(context);
+    String formatedTime = pickedTime.format(context);
     if (pickedTime == null) {
       print('Start Time Is Null');
     } else if (isStartTime == true) {

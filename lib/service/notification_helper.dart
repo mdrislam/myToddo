@@ -52,7 +52,7 @@ class NotificationHelper {
       title,
       body,
       platformChannelSpecifics,
-      payload: 'It could be anything you pass',
+      payload: title,
     );
   }
 
@@ -72,9 +72,8 @@ class NotificationHelper {
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
-            matchDateTimeComponents: DateTimeComponents.time,
-            payload: '${task.id}'
-            );
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: '${task.id}');
   }
 
   void requestIOSPermissions() {
@@ -94,7 +93,12 @@ class NotificationHelper {
     } else {
       print("Notification Done");
     }
-    Get.to(() => NotificationFullScreen(id: payload!));
+
+    if (payload == 'Theme Change') {
+      print('Theme has Changed');
+    } else {
+      Get.to(() => NotificationFullScreen(id: payload!));
+    }
   }
 
   tz.TZDateTime _convertTime(int hour, int minute) {
@@ -109,9 +113,9 @@ class NotificationHelper {
     return sheduledDate;
   }
 
-  Future<void>_configLocalTimeZone()async{
+  Future<void> _configLocalTimeZone() async {
     tz.initializeTimeZones();
-    final String timezone=  await FlutterNativeTimezone.getLocalTimezone();
+    final String timezone = await FlutterNativeTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timezone));
   }
 

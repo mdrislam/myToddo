@@ -10,14 +10,14 @@ import 'package:my_todo/ui/themes.dart';
 
 class NotificationFullScreen extends StatefulWidget {
   final String id;
-  NotificationFullScreen({Key? key, required  this.id}) : super(key: key);
+  NotificationFullScreen({Key? key, required this.id}) : super(key: key);
 
   @override
   _NotificationFullScreenState createState() => _NotificationFullScreenState();
 }
 
 class _NotificationFullScreenState extends State<NotificationFullScreen> {
-   Task task =Task();
+  Task task = Task();
 
   @override
   void initState() {
@@ -28,10 +28,10 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
   }
 
   _getTask() async {
-     task = await DbHelper.readSingleTask(int.parse(widget.id));
+    task = await DbHelper.readSingleTask(int.parse(widget.id));
     setState(() {
-    print(task.tojson());
-    print('Payload: ${widget.id}'); 
+      print(task.tojson());
+      print('Payload: ${widget.id}');
     });
   }
 
@@ -49,11 +49,11 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
       elevation: 0,
       leading: GestureDetector(
         onTap: () {
-         if (Platform.isAndroid) {
-                    SystemNavigator.pop();
-                  } else if (Platform.isIOS) {
-                    exit(0);
-                  }
+          if (Platform.isAndroid) {
+            SystemNavigator.pop();
+          } else if (Platform.isIOS) {
+            exit(0);
+          }
         },
         child: Icon(
           Icons.arrow_back,
@@ -61,7 +61,26 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
-      title: Text(task.title.toString(),style: CustomThemes().titleStyle,),
+      actions: [
+        GestureDetector(
+          onTap: () {
+            if (Platform.isAndroid) {
+              SystemNavigator.pop();
+            } else if (Platform.isIOS) {
+              exit(0);
+            }
+          },
+          child: Icon(
+            Icons.close,
+            size: 20.0,
+            color: Get.isDarkMode ? Colors.white : Colors.black,
+          ),
+        ),
+      ],
+      title: Text(
+        task.title.toString(),
+        style: CustomThemes().titleStyle,
+      ),
     );
   }
 }

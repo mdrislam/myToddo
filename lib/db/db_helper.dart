@@ -36,6 +36,10 @@ class DbHelper {
     print('Insert function Called');
     return await _db?.insert(_tablename, task!.tojson()) ?? 1;
   }
+  static Future<int> updateTask(Task? task) async {
+    print('Update function Called');
+    return await _db!.update(_tablename, task!.tojson(),where: 'id=?',whereArgs: [task.id]);
+  }
 
   static Future<List<Map<String, dynamic>>> queryTasks() {
     return _db!.query(_tablename);

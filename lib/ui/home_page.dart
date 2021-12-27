@@ -150,8 +150,14 @@ class _HomePageState extends State<HomePage> {
           child: Row(
             children: [
               GestureDetector(
-                onTap: () {
+                onTap: () async{
                   print('On Tap ');
+                  _taskController.setTask(task);
+                 await Get.to(AddTaskPage(task: task,));
+                  _taskController.getTask();
+                },
+                onLongPress: () {
+                  print('On Long Press');
                   _showBottomSheet(context, task);
                 },
                 child: TaskTile(task),
@@ -266,7 +272,7 @@ class _HomePageState extends State<HomePage> {
         },
         child: Icon(
           Get.isDarkMode ? Icons.wb_sunny_outlined : Icons.nightlight_round,
-          size: 20.0,
+          size: 30.0,
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
