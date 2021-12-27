@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:my_todo/db/db_helper.dart';
 import 'package:my_todo/service/theame_service.dart';
 import 'package:my_todo/ui/home_page.dart';
+import 'package:my_todo/ui/notification_full_screen.dart';
 import 'package:my_todo/ui/themes.dart';
 
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: CustomThemes.light,
       darkTheme: CustomThemes.dark,
       themeMode: TheameService().theme,
-      home: const HomePage(),
+      home:  NotificationFullScreen(id:'1'),
     );
   }
   

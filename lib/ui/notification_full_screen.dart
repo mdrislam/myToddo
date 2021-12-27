@@ -40,6 +40,10 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
     return Scaffold(
       backgroundColor: context.theme.backgroundColor,
       appBar: _appBar(),
+      body: Column(children: [
+
+        
+      ],),
     );
   }
 
@@ -57,7 +61,7 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
         },
         child: Icon(
           Icons.arrow_back,
-          size: 20.0,
+          size: 30.0,
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
@@ -72,15 +76,17 @@ class _NotificationFullScreenState extends State<NotificationFullScreen> {
           },
           child: Icon(
             Icons.close,
-            size: 20.0,
+            size: 30.0,
             color: Get.isDarkMode ? Colors.white : Colors.black,
           ),
         ),
+        const SizedBox(width: 10.0,)
       ],
       title: Text(
         task.title.toString(),
         style: CustomThemes().titleStyle,
       ),
     );
+    
   }
 }
