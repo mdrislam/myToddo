@@ -40,7 +40,23 @@ class DbHelper {
   static Future<List<Map<String, dynamic>>> queryTasks() {
     return _db!.query(_tablename);
   }
-  static delete(Task task)async{
-    await _db!.delete(_tablename,where: 'id=?',whereArgs: [task.id]);
+
+  static delete(Task task) async {
+    return await _db!.delete(_tablename, where: 'id=?', whereArgs: [task.id]);
+  }
+
+  static update(int id) async {
+    return await _db!.rawQuery('''
+    UPDATE tasks
+    SET isCompleted = ?
+    WHERE id =?
+    ''', [1, id]);
+  }
+
+  static Future<dynamic> readSingleTask(int id) async {
+
+    final task= await _db!.query(_tablename, where: 'id=?', whereArgs: [id]);
+
+    return Task.fromJson(task.first);
   }
 }
