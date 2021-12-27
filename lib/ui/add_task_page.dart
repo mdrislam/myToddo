@@ -271,7 +271,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
         },
         child: Icon(
           Icons.arrow_back_ios,
-          size: 20.0,
+          size: 30.0,
           color: Get.isDarkMode ? Colors.white : Colors.black,
         ),
       ),
